@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <title>多绮爱服饰工序成本工具 - 手机版</title>
+    <!-- 禁止缓存，确保每次都加载最新版本 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding-bottom: 70px;
+            overflow-x: hidden;
+        }
+        
+        /* 顶部标题栏 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .header .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        /* 主内容区域 */
+        .container {
+            padding: 12px;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* 大按钮网格 */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .big-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .big-btn:active {
+            transform: scale(0.96);
+        }
+        
+        .big-btn .icon {
+            font-size: 28px;
+        }
+        
+        .big-btn.green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        .big-btn.orange {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .big-btn.blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        /* 底部导航栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 16px;
+            cursor: pointer;
+            color: #999;
+            font-size: 11px;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+        }
+        
+        .nav-item .icon {
+            font-size: 22px;
+        }
+        
+        /* 登录页面 */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo .icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .login-logo h1 {
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .login-logo p {
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        /* 款式列表 */
+        .style-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .style-item:active {
+            transform: scale(0.98);
+        }
+        
+        .style-item .img {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        .style-item .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .style-item .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a2e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .style-item .meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .style-item .price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e94560;
+            margin-top: 4px;
+        }
+        
+        .style-item .status {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 4px;
+        }
+        
+        .status.approved {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .status.pending {
+            background: #fef9c3;
+            color: #a16207;
+        }
+        
+        /* 搜索框 */
+        .search-box {
+            background: white;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .search-box input {
+            flex: 1;
+            border: none;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        /* 详情弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 工序表格 */
+        .process-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        
+        .process-table th,
+        .process-table td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+        
+        .process-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .process-table input,
+        .process-table select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+        
+        .total-row .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .total-row .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e94560;
+        }
+        
+        /* Toast提示 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+        
+        .empty-state .icon {
+            font-size: 50px;
+            margin-bottom: 12px;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+        }
+        
+        /* 加载中 */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+        }
+        
+        .loading .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f4f6;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* 图片上传 */
+        .img-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        
+        .img-upload-area:active {
+            background: #f9fafb;
+        }
+        
+        .img-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .img-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        /* 按钮组 */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .btn-group button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-group .btn-save {
+            background: #16a34a;
+            color: white;
+        }
+        
+        .btn-group .btn-cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-group .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination .page-info {
+            font-size: 13px;
+            color: #6b7280;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="github-sync.js?v=2.1.1"></script>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div id="loginPage" class="login-container" style="display:none">
+        <div class="login-logo">
+            <div class="icon">👔</div>
+            <h1>多绮爱服饰</h1>
+            <p>工序成本管理工具</p>
+        </div>
+        <div class="login-card">
+            <div class="form-group">
+                <label>账号</label>
+                <input type="text" id="loginUsername" placeholder="请输入账号">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="loginPassword" placeholder="请输入密码">
+            </div>
+            <button class="btn-primary" onclick="doLogin()">登 录</button>
+            <button class="btn-secondary" onclick="showRegister()">没有账号？立即注册</button>
+        </div>
+    </div>
+    
+    <!-- 注册页面 -->
+    <div id="registerPage" class="login-container" style="display:none">
+        <div class="login-logo">
+            <div class="icon">📝</div>
+            <h1>注册账号</h1>
+            <p>创建您的账号</p>
+        </div>
+        <div class="login-card">
+            <div class="form-group">
+                <label>账号</label>
+                <input type="text" id="regUsername" placeholder="请输入账号">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="regPassword" placeholder="请输入密码">
+            </div>
+            <div class="form-group">
+                <label>确认密码</label>
+                <input type="password" id="regPassword2" placeholder="请再次输入密码">
+            </div>
+            <button class="btn-primary" onclick="doRegister()">注 册</button>
+            <button class="btn-secondary" onclick="showLogin()">已有账号？返回登录</button>
+        </div>
+    </div>
+    
+    <!-- 主页面 -->
+    <div id="mainPage" style="display:none">
+        <!-- 顶部标题栏 -->
+        <div class="header">
+            <h1>多绮爱服饰工序工具</h1>
+            <div class="user-info">
+                <span id="userInfoText">未登录</span>
+                <span onclick="doLogout()" style="cursor:pointer">退出</span>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="container">
+            <!-- 首页 -->
+            <div id="homePage">
+                <div class="card">
+                    <div class="card-title">📊 数据概览</div>
+                    <div id="statsArea">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>加载中...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">⚡ 快捷操作</div>
+                    <div class="btn-grid">
+                        <button class="big-btn" onclick="showNewStyle()">
+                            <span class="icon">➕</span>
+                            <span>新增款式</span>
+                        </button>
+                        <button class="big-btn green" onclick="showStyleList()">
+                            <span class="icon">📋</span>
+                            <span>历史款式</span>
+                        </button>
+                        <button class="big-btn orange" onclick="showImageSearch()">
+                            <span class="icon">🔍</span>
+                            <span>以图搜款</span>
+                        </button>
+                        <button class="big-btn blue" onclick="goToDesktop()">
+                            <span class="icon">💻</span>
+                            <span>电脑版</span>
+                        </button>
+                        <button class="big-btn" onclick="manualSync()" style="background:linear-gradient(135deg,#667eea,#764ba2)">
+                            <span class="icon">☁️</span>
+                            <span>云端同步</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 款式列表页 -->
+            <div id="listPage" style="display:none">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="searchInput" placeholder="搜索款式名称..." oninput="filterStyles()">
+                </div>
+                <div id="styleListArea">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>加载中...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 新增款式页 -->
+            <div id="newStylePage" style="display:none">
+                <div class="card">
+                    <div class="card-title">➕ 新增款式</div>
+                    <div class="form-group">
+                        <label>款号</label>
+                        <input type="text" id="newStyleCode" placeholder="请输入款号">
+                    </div>
+                    <div class="form-group">
+                        <label>款式名称</label>
+                        <input type="text" id="newStyleName" placeholder="请输入款式名称">
+                    </div>
+                    <div class="form-group">
+                        <label>客户</label>
+                        <input type="text" id="newStyleCustomer" placeholder="请输入客户名称">
+                    </div>
+                    <div class="form-group">
+                        <label>日期</label>
+                        <input type="date" id="newStyleDate">
+                    </div>
+                    <div class="form-group">
+                        <label>备注</label>
+                        <textarea id="newStyleNote" rows="2" placeholder="请输入备注"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>上传图片</label>
+                        <div class="img-upload-area" onclick="document.getElementById('newStyleImg').click()">
+                            <div style="font-size:30px;margin-bottom:6px">📷</div>
+                            <div style="font-size:13px;color:#6b7280">点击上传图片</div>
+                        </div>
+                        <input type="file" id="newStyleImg" accept="image/*" multiple style="display:none" onchange="previewNewStyleImg(event)">
+                        <div class="img-preview" id="newStyleImgPreview"></div>
+                    </div>
+                    
+                    <!-- 工序选择区域（和电脑版一致，直接在页面显示） -->
+                    <div class="form-group">
+                        <label>📋 工序选择</label>
+                        
+                        <!-- 工序筛选 -->
+                        <input type="text" id="mobileProcFilter" placeholder="🔍 搜索工序名称（三分类同步）..." oninput="filterMobileProcesses()" style="margin-bottom:10px">
+                        
+                        <!-- 三分类标签 -->
+                        <div style="display:flex;gap:6px;margin-bottom:10px">
+                            <button id="mobileProcTabPingche" onclick="switchMobileProcTab('pingche')" style="flex:1;padding:10px;background:#4361ee;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">🚲 平车</button>
+                            <button id="mobileProcTabZache" onclick="switchMobileProcTab('zache')" style="flex:1;padding:10px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">⚡ 扎车</button>
+                            <button id="mobileProcTabKanche" onclick="switchMobileProcTab('kanche')" style="flex:1;padding:10px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">🔪 坎车</button>
+                        </div>
+                        
+                        <!-- 工序列表（带复选框，和电脑版一致） -->
+                        <div id="mobileProcessList" style="max-height:250px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:12px">
+                            <div style="text-align:center;padding:20px;color:#9ca3af;font-size:13px">加载中...</div>
+                        </div>
+                        
+                        <!-- 已选工序表格（和电脑版一致） -->
+                        <div style="background:#f8fafc;border-radius:8px;padding:10px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                                <span style="font-size:14px;font-weight:600;color:#1a1a2e">已选工序（<span id="mobileSelectedCount">0</span>个）</span>
+                                <button onclick="clearMobileSelectedProcesses()" style="padding:4px 10px;background:#fee2e2;color:#ef4444;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">清空全部</button>
+                            </div>
+                            <div id="mobileSelectedProcessTable">
+                                <div style="text-align:center;padding:15px;color:#9ca3af;font-size:13px">暂无已选工序</div>
+                            </div>
+                            <div class="total-row" id="mobileTotalRow" style="display:none;margin-top:10px">
+                                <span class="label">合计</span>
+                                <span class="value" id="mobileTotal">¥0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn-cancel" onclick="showHome()">取消</button>
+                        <button class="btn-save" onclick="saveNewStyle()">保存</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 以图搜款页 -->
+            <div id="searchPage" style="display:none">
+                <div class="card">
+                    <div class="card-title">🔍 以图搜款</div>
+                    <div class="img-upload-area" onclick="document.getElementById('searchImg').click()">
+                        <div style="font-size:30px;margin-bottom:6px">📷</div>
+                        <div style="font-size:13px;color:#6b7280">点击上传要搜索的图片</div>
+                    </div>
+                    <input type="file" id="searchImg" accept="image/*" style="display:none" onchange="doImageSearch(event)">
+                    <div id="searchResultArea"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showHome()" id="navHome">
+                <span class="icon">🏠</span>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" onclick="showStyleList()" id="navList">
+                <span class="icon">📋</span>
+                <span>款式</span>
+            </div>
+            <div class="nav-item" onclick="showNewStyle()" id="navAdd">
+                <span class="icon">➕</span>
+                <span>新增</span>
+            </div>
+            <div class="nav-item" onclick="showImageSearch()" id="navSearch">
+                <span class="icon">🔍</span>
+                <span>搜款</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 款式详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>款式详情</h2>
+                <button class="close-btn" onclick="closeDetail()">✕</button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+    
+    <!-- 添加工序弹窗 -->
+    <div class="modal-overlay" id="addProcessModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>➕ 添加工序</h2>
+                <button class="close-btn" onclick="closeAddProcessModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>工序类型</label>
+                <select id="addProcessType">
+                    <option value="pingche">平车</option>
+                    <option value="zache">扎车</option>
+                    <option value="kanche">坎车</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>工序名称</label>
+                <input type="text" id="addProcessName" placeholder="请输入工序名称">
+            </div>
+            <div class="form-group">
+                <label>数量</label>
+                <input type="number" id="addProcessQty" value="1" min="1" placeholder="请输入数量">
+            </div>
+            <div class="form-group">
+                <label>单价（元）</label>
+                <input type="number" id="addProcessPrice" value="0.00" min="0" step="0.01" placeholder="请输入单价">
+            </div>
+            <div class="btn-group">
+                <button class="btn-cancel" onclick="closeAddProcessModal()">取消</button>
+                <button class="btn-save" onclick="confirmAddProcess()">确认添加</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 工序库选择弹窗 -->
+    <div class="modal-overlay" id="processLibraryModal">
+        <div class="modal" style="max-height:90vh">
+            <div class="modal-header">
+                <h2>📋 从工序库选择</h2>
+                <button class="close-btn" onclick="closeProcessLibraryModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <input type="text" id="processLibraryFilter" placeholder="🔍 搜索工序名称..." oninput="filterProcessLibrary()">
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+                <button id="procTabPingche" onclick="switchProcessTab('pingche')" style="flex:1;padding:10px;background:#4361ee;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">平车</button>
+                <button id="procTabZache" onclick="switchProcessTab('zache')" style="flex:1;padding:10px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">扎车</button>
+                <button id="procTabKanche" onclick="switchProcessTab('kanche')" style="flex:1;padding:10px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">坎车</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span style="font-size:12px;color:#6b7280">共 <span id="totalProcCount">0</span> 个工序</span>
+                <div style="display:flex;gap:6px">
+                    <button onclick="selectAllProcesses()" style="padding:4px 10px;background:#e0e7ff;color:#4361ee;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">全选</button>
+                    <button onclick="deselectAllProcesses()" style="padding:4px 10px;background:#fee2e2;color:#ef4444;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">清空</button>
+                </div>
+            </div>
+            <div id="processLibraryList" style="max-height:35vh;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px">
+                <div style="text-align:center;padding:20px;color:#9ca3af;font-size:13px">加载中...</div>
+            </div>
+            <div style="margin-top:10px;padding:10px;background:#f8fafc;border-radius:8px">
+                <div style="font-size:12px;color:#6b7280;margin-bottom:6px">已选工序（<span id="selectedProcCount">0</span>个）：</div>
+                <div id="selectedProcPreview" style="display:flex;flex-wrap:wrap;gap:4px;max-height:60px;overflow-y:auto">
+                    <span style="font-size:12px;color:#9ca3af">暂无</span>
+                </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+                <button onclick="closeProcessLibraryModal()" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">取消</button>
+                <button onclick="confirmProcessSelection()" style="flex:2;padding:12px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">确认添加（<span id="selectedProcCount2">0</span>）</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 全局变量
+        let currentUser = null;
+        let DB = { processes: { pingche: [], zache: [], kanche: [] }, styles: [] };
+        let currentPage = 'home';
+        let newStyleImages = [];
+        let newStyleProcesses = [];
+        let allStyles = [];
+        let currentProcessTab = 'pingche';
+        let selectedProcessIds = [];
+        let currentMobileProcTab = 'pingche';
+        let mobileSelectedProcesses = [];
+        
+        // 存储key（和电脑版一致）
+        const DB_KEY = 'gf_cost_db';
+        const USERS_KEY = 'app_users';
+        const CURRENT_USER_KEY = 'app_current_user';
+        
+        // ============================================
+        // 专业云端同步模块 - 确保双向同步可靠
+        // ============================================
+        
+        // 同步日志
+        function addSyncLog(message, type = 'info') {
+            try {
+                const logs = JSON.parse(localStorage.getItem('mobile_sync_log') || '[]');
+                logs.unshift({
+                    time: new Date().toLocaleString('zh-CN'),
+                    message: message,
+                    type: type
+                });
+                localStorage.setItem('mobile_sync_log', JSON.stringify(logs.slice(0, 50)));
+                console.log('[同步日志]', type, message);
+            } catch(e) {}
+        }
+        
+        // 把电脑版的分开存储数据转换成手机版的统一格式
+        function convertFromDesktopToMobile() {
+            try {
+                addSyncLog('开始转换：电脑版 → 手机版', 'info');
+                
+                // 从localStorage读取最新的手机版数据
+                let mobileDB = {};
+                try {
+                    mobileDB = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
+                } catch(e) {
+                    mobileDB = {};
+                }
+                if (!mobileDB.styles) mobileDB.styles = [];
+                if (!mobileDB.processes) mobileDB.processes = { pingche: [], zache: [], kanche: [] };
+                
+                // 【重要】优先从gf_cost_db读取数据（电脑版saveDB只保存gf_cost_db）
+                let desktopStyles = [];
+                let source = 'styles';
+                
+                // 先尝试从gf_cost_db读取
+                const gfCostDBStr = localStorage.getItem('gf_cost_db');
+                if (gfCostDBStr) {
+                    try {
+                        const gfCostDB = JSON.parse(gfCostDBStr);
+                        if (gfCostDB.styles && gfCostDB.styles.length > 0) {
+                            desktopStyles = gfCostDB.styles;
+                            source = 'gf_cost_db';
+                            addSyncLog('从gf_cost_db读取到 ' + desktopStyles.length + ' 个款式', 'info');
+                        }
+                    } catch(e) {
+                        addSyncLog('解析gf_cost_db失败：' + e.message, 'warning');
+                    }
+                }
+                
+                // 如果gf_cost_db没有数据，再从styles读取
+                if (desktopStyles.length === 0) {
+                    const desktopStylesStr = localStorage.getItem('styles');
+                    if (desktopStylesStr) {
+                        try {
+                            desktopStyles = JSON.parse(desktopStylesStr);
+                            source = 'styles';
+                            addSyncLog('从styles读取到 ' + desktopStyles.length + ' 个款式', 'info');
+                        } catch(e) {
+                            addSyncLog('解析styles失败：' + e.message, 'warning');
+                        }
+                    }
+                }
+                
+                if (desktopStyles.length === 0) {
+                    addSyncLog('电脑版款式数据为空，跳过转换', 'warning');
+                    return false;
+                }
+                
+                addSyncLog('电脑版有 ' + desktopStyles.length + ' 个款式（来源：' + source + '）', 'info');
+                
+                // 【重要】直接用云端的styles覆盖本地的styles，确保完全一致（包括删除操作）
+                // 只覆盖styles，保留本地的其他数据（processes、用户数据等）
+                const oldCount = mobileDB.styles.length;
+                mobileDB.styles = JSON.parse(JSON.stringify(desktopStyles));
+                
+                // 保存转换后的数据到localStorage
+                localStorage.setItem(DB_KEY, JSON.stringify(mobileDB));
+                // 同时更新全局变量DB
+                DB = mobileDB;
+                
+                addSyncLog('转换完成：云端 ' + desktopStyles.length + ' 个款式，本地从 ' + oldCount + ' 个更新为 ' + mobileDB.styles.length + ' 个（已同步删除操作）', 'success');
+                return true;
+            } catch(e) {
+                addSyncLog('转换失败：' + e.message, 'error');
+                console.error('电脑版转手机版数据失败:', e);
+                return false;
+            }
+        }
+        
+        // 把手机版的统一格式转换成电脑版的分开存储格式
+        function convertFromMobileToDesktop() {
+            try {
+                addSyncLog('开始转换：手机版 → 电脑版', 'info');
+                
+                // 从localStorage读取最新的手机版数据
+                let mobileDB = {};
+                try {
+                    mobileDB = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
+                } catch(e) {
+                    mobileDB = {};
+                }
+                if (!mobileDB.styles) mobileDB.styles = [];
+                
+                addSyncLog('手机版有 ' + mobileDB.styles.length + ' 个款式', 'info');
+                
+                // 把手机版的styles数据转换成电脑版格式
+                if (mobileDB.styles.length > 0) {
+                    localStorage.setItem('styles', JSON.stringify(mobileDB.styles));
+                    addSyncLog('已同步 ' + mobileDB.styles.length + ' 个款式到电脑版styles', 'success');
+                } else {
+                    addSyncLog('手机版款式为空，跳过styles同步', 'warning');
+                }
+                
+                // 把手机版的用户数据转换成电脑版格式
+                const mobileUsers = localStorage.getItem(USERS_KEY);
+                if (mobileUsers) {
+                    localStorage.setItem('app_users', mobileUsers);
+                    addSyncLog('已同步用户数据到电脑版', 'success');
+                }
+                
+                // 把当前用户数据也同步
+                const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+                if (currentUser) {
+                    localStorage.setItem('app_current_user', currentUser);
+                }
+                
+                return true;
+            } catch(e) {
+                addSyncLog('转换失败：' + e.message, 'error');
+                console.error('手机版转电脑版数据失败:', e);
+                return false;
+            }
+        }
+        
+        // 从云端同步数据到本地
+        async function syncFromCloudProfessional() {
+            try {
+                addSyncLog('开始从云端同步数据...', 'info');
+                
+                if (typeof window.CloudSync === 'undefined') {
+                    addSyncLog('CloudSync未加载', 'error');
+                    return false;
+                }
+                
+                // 从云端同步数据
+                await window.CloudSync.syncFromCloud(true);
+                addSyncLog('从云端下载数据完成', 'success');
+                
+                // 把电脑版数据转换成手机版格式
+                const convertResult = convertFromDesktopToMobile();
+                
+                // 重新加载本地数据
+                loadDB();
+                
+                addSyncLog('从云端同步完成', 'success');
+                return true;
+            } catch(e) {
+                addSyncLog('从云端同步失败：' + e.message, 'error');
+                console.error('从云端同步失败:', e);
+                return false;
+            }
+        }
+        
+        // 把本地数据同步到云端
+        async function syncToCloudProfessional() {
+            try {
+                addSyncLog('开始同步数据到云端...', 'info');
+                
+                if (typeof window.CloudSync === 'undefined') {
+                    addSyncLog('CloudSync未加载', 'error');
+                    return false;
+                }
+                
+                // 先把手机版数据转换成电脑版格式
+                const convertResult = convertFromMobileToDesktop();
+                
+                // 同步到云端
+                await window.CloudSync.syncToCloud();
+                addSyncLog('上传数据到云端完成', 'success');
+                
+                return true;
+            } catch(e) {
+                addSyncLog('同步到云端失败：' + e.message, 'error');
+                console.error('同步到云端失败:', e);
+                return false;
+            }
+        }
+        
+        // 完整双向同步
+        async function fullSync() {
+            try {
+                showSyncStatus('正在同步数据...', 'info');
+                addSyncLog('========== 开始完整双向同步 ==========', 'info');
+                
+                // 第一步：把本地数据同步到云端
+                const uploadResult = await syncToCloudProfessional();
+                
+                // 第二步：从云端获取最新数据
+                const downloadResult = await syncFromCloudProfessional();
+                
+                // 刷新页面显示
+                if (currentPage === 'home') showHome();
+                else if (currentPage === 'list') showStyleList();
+                
+                if (uploadResult && downloadResult) {
+                    showSyncStatus('✅ 同步完成，数据已更新', 'success');
+                    addSyncLog('========== 完整双向同步完成 ==========', 'success');
+                } else {
+                    showSyncStatus('⚠️ 同步部分失败，请查看日志', 'error');
+                    addSyncLog('========== 完整双向同步部分失败 ==========', 'error');
+                }
+                
+                setTimeout(function() { hideSyncStatus(); }, 3000);
+                return true;
+            } catch(e) {
+                showSyncStatus('⚠️ 同步失败: ' + e.message, 'error');
+                addSyncLog('完整同步失败：' + e.message, 'error');
+                setTimeout(function() { hideSyncStatus(); }, 5000);
+                return false;
+            }
+        }
+        
+        // 初始化
+        function init() {
+            loadDB();
+            initUsers();
+            checkLogin();
+            
+            // 显示同步状态
+            showSyncStatus('正在从云端获取最新数据...', 'info');
+            addSyncLog('页面加载，开始初始化同步', 'info');
+            
+            // 立即从云端同步数据
+            setTimeout(function() {
+                syncFromCloudProfessional().then(function(success) {
+                    // 刷新当前页面显示
+                    if (currentPage === 'home') showHome();
+                    else if (currentPage === 'list') showStyleList();
+                    
+                    if (success) {
+                        showSyncStatus('✅ 云端数据已更新', 'success');
+                    } else {
+                        showSyncStatus('⚠️ 云端同步失败，使用本地数据', 'error');
+                    }
+                    setTimeout(function() { hideSyncStatus(); }, 3000);
+                });
+            }, 800);
+            
+            // 设置定期同步（每隔60秒从云端拉取最新数据）
+            setInterval(function() {
+                addSyncLog('定期同步：正在从云端获取最新数据...', 'info');
+                syncFromCloudProfessional().then(function(success) {
+                    if (success && currentPage === 'list') {
+                        showStyleList();
+                    }
+                });
+            }, 60000);
+        }
+        
+        // 显示同步状态
+        function showSyncStatus(message, type) {
+            var statusEl = document.getElementById('syncStatusBar');
+            if (!statusEl) {
+                statusEl = document.createElement('div');
+                statusEl.id = 'syncStatusBar';
+                statusEl.style.cssText = 'position:fixed;top:0;left:0;right:0;padding:10px 16px;text-align:center;font-size:13px;font-weight:600;z-index:10000;transition:all 0.3s;';
+                document.body.appendChild(statusEl);
+            }
+            
+            var bgColor = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#4361ee';
+            statusEl.style.background = bgColor;
+            statusEl.style.color = 'white';
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+            statusEl.style.transform = 'translateY(0)';
+        }
+        
+        // 隐藏同步状态
+        function hideSyncStatus() {
+            var statusEl = document.getElementById('syncStatusBar');
+            if (statusEl) {
+                statusEl.style.transform = 'translateY(-100%)';
+                setTimeout(function() { statusEl.style.display = 'none'; }, 300);
+            }
+        }
+        
+        // 手动同步数据
+        function manualSync() {
+            fullSync();
+        }
+        
+        // 加载数据
+        function loadDB() {
+            try {
+                const saved = localStorage.getItem(DB_KEY);
+                if (saved) {
+                    DB = JSON.parse(saved);
+                }
+                if (!DB.styles) DB.styles = [];
+                if (!DB.processes) DB.processes = { pingche: [], zache: [], kanche: [] };
+            } catch (e) {
+                console.error('加载数据失败:', e);
+                DB = { processes: { pingche: [], zache: [], kanche: [] }, styles: [] };
+            }
+        }
+        
+        // 保存数据
+        function saveDB() {
+            try {
+                localStorage.setItem(DB_KEY, JSON.stringify(DB));
+                addSyncLog('数据已保存到本地，款式数：' + (DB.styles ? DB.styles.length : 0), 'info');
+                
+                // 自动同步到云端（延迟5秒，避免频繁同步）
+                if (typeof window.CloudSync !== 'undefined') {
+                    if (window.mobileSyncTimer) clearTimeout(window.mobileSyncTimer);
+                    window.mobileSyncTimer = setTimeout(function() {
+                        syncToCloudProfessional().catch(function(e) {
+                            addSyncLog('自动同步失败：' + e.message, 'error');
+                        });
+                    }, 5000);
+                }
+            } catch (e) {
+                console.error('保存数据失败:', e);
+                showToast('保存失败：存储空间不足');
+            }
+        }
+        
+        // 简单的密码哈希（和电脑版一致）
+        function hashPassword(pwd) {
+            try {
+                return btoa(unescape(encodeURIComponent(pwd + '_dqas_salt')));
+            } catch(e) {
+                return pwd;
+            }
+        }
+        
+        // 初始化用户系统，预设主账号
+        function initUsers() {
+            var users = localStorage.getItem(USERS_KEY);
+            if (!users) {
+                var defaultUsers = {
+                    'admin': {
+                        username: 'admin',
+                        password: hashPassword('admin123'),
+                        role: 'admin',
+                        isAdmin: true,
+                        createdAt: Date.now(),
+                        uid: 'admin_001'
+                    }
+                };
+                localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
+            }
+        }
+        
+        // 检查登录状态
+        function checkLogin() {
+            try {
+                initUsers();
+                const savedUser = localStorage.getItem(CURRENT_USER_KEY);
+                if (savedUser) {
+                    currentUser = JSON.parse(savedUser);
+                    showMain();
+                } else {
+                    showLogin();
+                }
+            } catch (e) {
+                showLogin();
+            }
+        }
+        
+        // 显示登录页
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('mainPage').style.display = 'none';
+        }
+        
+        // 显示注册页
+        function showRegister() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'flex';
+            document.getElementById('mainPage').style.display = 'none';
+        }
+        
+        // 登录
+        function doLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showToast('请输入账号和密码');
+                return;
+            }
+            
+            try {
+                const users = JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+                const user = users[username];
+                
+                if (!user || user.password !== hashPassword(password)) {
+                    showToast('账号或密码错误');
+                    return;
+                }
+                
+                currentUser = user;
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+                showToast('登录成功');
+                showMain();
+            } catch (e) {
+                showToast('登录失败：' + e.message);
+            }
+        }
+        
+        // 注册
+        function doRegister() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const password2 = document.getElementById('regPassword2').value;
+            
+            if (!username || !password) {
+                showToast('请输入账号和密码');
+                return;
+            }
+            
+            if (password !== password2) {
+                showToast('两次密码不一致');
+                return;
+            }
+            
+            try {
+                const users = JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+                
+                if (users[username]) {
+                    showToast('账号已存在');
+                    return;
+                }
+                
+                const newUser = {
+                    username: username,
+                    password: hashPassword(password),
+                    role: 'viewer',
+                    isAdmin: false,
+                    createdAt: Date.now(),
+                    uid: 'user_' + Date.now()
+                };
+                
+                users[username] = newUser;
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                showToast('注册成功，请登录');
+                showLogin();
+            } catch (e) {
+                showToast('注册失败：' + e.message);
+            }
+        }
+        
+        // 退出登录
+        function doLogout() {
+            currentUser = null;
+            localStorage.removeItem(CURRENT_USER_KEY);
+            showToast('已退出登录');
+            showLogin();
+        }
+        
+        // 显示主页面
+        function showMain() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('mainPage').style.display = 'block';
+            
+            document.getElementById('userInfoText').textContent = 
+                currentUser.username + ' (' + (currentUser.role === 'admin' ? '管理员' : '普通用户') + ')';
+            
+            showHome();
+        }
+        
+        // 显示首页
+        function showHome() {
+            currentPage = 'home';
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('listPage').style.display = 'none';
+            document.getElementById('newStylePage').style.display = 'none';
+            document.getElementById('searchPage').style.display = 'none';
+            
+            updateNav('navHome');
+            loadStats();
+        }
+        
+        // 显示款式列表
+        function showStyleList() {
+            currentPage = 'list';
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('listPage').style.display = 'block';
+            document.getElementById('newStylePage').style.display = 'none';
+            document.getElementById('searchPage').style.display = 'none';
+            
+            updateNav('navList');
+            loadStyleList();
+        }
+        
+        // 显示新增款式
+        function showNewStyle() {
+            currentPage = 'new';
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('listPage').style.display = 'none';
+            document.getElementById('newStylePage').style.display = 'block';
+            document.getElementById('searchPage').style.display = 'none';
+            
+            updateNav('navAdd');
+            
+            // 初始化日期
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('newStyleDate').value = today;
+            newStyleImages = [];
+            newStyleProcesses = [];
+            mobileSelectedProcesses = [];
+            currentMobileProcTab = 'pingche';
+            document.getElementById('newStyleImgPreview').innerHTML = '';
+            document.getElementById('mobileProcFilter').value = '';
+            
+            // 初始化工序选择区域
+            switchMobileProcTab('pingche');
+            renderMobileSelectedTable();
+        }
+        
+        // 切换手机版工序类型标签
+        function switchMobileProcTab(type) {
+            currentMobileProcTab = type;
+            
+            // 更新标签样式
+            document.getElementById('mobileProcTabPingche').style.background = type === 'pingche' ? '#4361ee' : '#f3f4f6';
+            document.getElementById('mobileProcTabPingche').style.color = type === 'pingche' ? '#fff' : '#374151';
+            document.getElementById('mobileProcTabZache').style.background = type === 'zache' ? '#4361ee' : '#f3f4f6';
+            document.getElementById('mobileProcTabZache').style.color = type === 'zache' ? '#fff' : '#374151';
+            document.getElementById('mobileProcTabKanche').style.background = type === 'kanche' ? '#4361ee' : '#f3f4f6';
+            document.getElementById('mobileProcTabKanche').style.color = type === 'kanche' ? '#fff' : '#374151';
+            
+            renderMobileProcessList();
+        }
+        
+        // 筛选手机版工序
+        function filterMobileProcesses() {
+            renderMobileProcessList();
+        }
+        
+        // 渲染手机版工序列表
+        function renderMobileProcessList() {
+            const listArea = document.getElementById('mobileProcessList');
+            const filter = document.getElementById('mobileProcFilter').value.toLowerCase();
+            const processes = DB.processes[currentMobileProcTab] || [];
+            
+            const filtered = processes.filter(p => {
+                return !filter || (p.name && p.name.toLowerCase().includes(filter));
+            });
+            
+            if (filtered.length === 0) {
+                listArea.innerHTML = '<div style="text-align:center;padding:20px;color:#9ca3af;font-size:13px">暂无工序</div>';
+                return;
+            }
+            
+            let html = '';
+            filtered.forEach((p, idx) => {
+                const isSelected = mobileSelectedProcesses.some(sp => sp.name === p.name && sp.type === currentMobileProcTab);
+                html += `
+                    <div style="display:flex;align-items:center;padding:12px 14px;border-bottom:1px solid #f3f4f6;cursor:pointer;${isSelected ? 'background:#eff6ff' : ''}" onclick="toggleMobileProcess('${p.name}', ${p.price || 0})">
+                        <div style="width:24px;height:24px;border:2px solid ${isSelected ? '#4361ee' : '#d1d5db'};border-radius:5px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0;background:${isSelected ? '#4361ee' : 'white'}">
+                            ${isSelected ? '<span style="color:white;font-size:14px;font-weight:bold">✓</span>' : ''}
+                        </div>
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:14px;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(p.name || '')}</div>
+                        </div>
+                        <div style="font-size:15px;font-weight:700;color:#e94560;margin-left:10px;flex-shrink:0">¥${(p.price || 0).toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            listArea.innerHTML = html;
+        }
+        
+        // 切换手机版工序选中状态
+        function toggleMobileProcess(name, price) {
+            const existingIdx = mobileSelectedProcesses.findIndex(sp => sp.name === name && sp.type === currentMobileProcTab);
+            
+            if (existingIdx >= 0) {
+                mobileSelectedProcesses.splice(existingIdx, 1);
+            } else {
+                mobileSelectedProcesses.push({
+                    id: 'proc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    type: currentMobileProcTab,
+                    name: name,
+                    qty: 1,
+                    price: price
+                });
+            }
+            
+            renderMobileProcessList();
+            renderMobileSelectedTable();
+        }
+        
+        // 渲染手机版已选工序表格
+        function renderMobileSelectedTable() {
+            const tableArea = document.getElementById('mobileSelectedProcessTable');
+            const totalRow = document.getElementById('mobileTotalRow');
+            const totalSpan = document.getElementById('mobileTotal');
+            const countSpan = document.getElementById('mobileSelectedCount');
+            
+            countSpan.textContent = mobileSelectedProcesses.length;
+            
+            if (mobileSelectedProcesses.length === 0) {
+                tableArea.innerHTML = '<div style="text-align:center;padding:15px;color:#9ca3af;font-size:13px">暂无已选工序</div>';
+                totalRow.style.display = 'none';
+                return;
+            }
+            
+            const typeNames = { pingche: '平车', zache: '扎车', kanche: '坎车' };
+            let total = 0;
+            
+            let html = '<table class="process-table" style="font-size:12px"><thead><tr><th>工序</th><th>类型</th><th style="text-align:center">数量</th><th>单价</th><th>小计</th><th style="text-align:center">操作</th></tr></thead><tbody>';
+            
+            mobileSelectedProcesses.forEach((p, idx) => {
+                const subtotal = p.price * p.qty;
+                total += subtotal;
+                html += `
+                    <tr>
+                        <td>${escapeHtml(p.name)}</td>
+                        <td>${typeNames[p.type] || p.type}</td>
+                        <td style="text-align:center">
+                            <input type="number" value="${p.qty}" min="1" style="width:50px;padding:4px;border:1px solid #e5e7eb;border-radius:4px;text-align:center;font-size:12px" onchange="updateMobileProcessQty(${idx}, this.value)">
+                        </td>
+                        <td>
+                            <input type="number" value="${p.price.toFixed(2)}" min="0" step="0.01" style="width:60px;padding:4px;border:1px solid #e5e7eb;border-radius:4px;text-align:center;font-size:12px" onchange="updateMobileProcessPrice(${idx}, this.value)">
+                        </td>
+                        <td style="font-weight:600">¥${subtotal.toFixed(2)}</td>
+                        <td style="text-align:center">
+                            <button onclick="removeMobileProcess(${idx})" style="padding:4px 8px;background:#ef4444;color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer">✕</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            tableArea.innerHTML = html;
+            totalRow.style.display = 'flex';
+            totalSpan.textContent = '¥' + total.toFixed(2);
+        }
+        
+        // 更新手机版已选工序数量
+        function updateMobileProcessQty(idx, value) {
+            const qty = parseInt(value) || 1;
+            mobileSelectedProcesses[idx].qty = qty;
+            renderMobileSelectedTable();
+        }
+        
+        // 更新手机版已选工序单价
+        function updateMobileProcessPrice(idx, value) {
+            const price = parseFloat(value) || 0;
+            mobileSelectedProcesses[idx].price = price;
+            renderMobileSelectedTable();
+        }
+        
+        // 删除手机版已选工序
+        function removeMobileProcess(idx) {
+            mobileSelectedProcesses.splice(idx, 1);
+            renderMobileProcessList();
+            renderMobileSelectedTable();
+            showToast('工序已删除');
+        }
+        
+        // 清空手机版已选工序
+        function clearMobileSelectedProcesses() {
+            mobileSelectedProcesses = [];
+            renderMobileProcessList();
+            renderMobileSelectedTable();
+            showToast('已清空全部工序');
+        }
+        
+        // 显示添加工序弹窗
+        function showAddProcessModal() {
+            document.getElementById('addProcessType').value = 'pingche';
+            document.getElementById('addProcessName').value = '';
+            document.getElementById('addProcessQty').value = '1';
+            document.getElementById('addProcessPrice').value = '0.00';
+            document.getElementById('addProcessModal').classList.add('show');
+        }
+        
+        // 关闭添加工序弹窗
+        function closeAddProcessModal() {
+            document.getElementById('addProcessModal').classList.remove('show');
+        }
+        
+        // 确认添加工序
+        function confirmAddProcess() {
+            const type = document.getElementById('addProcessType').value;
+            const name = document.getElementById('addProcessName').value.trim();
+            const qty = parseInt(document.getElementById('addProcessQty').value) || 1;
+            const price = parseFloat(document.getElementById('addProcessPrice').value) || 0;
+            
+            if (!name) {
+                showToast('请输入工序名称');
+                return;
+            }
+            
+            newStyleProcesses.push({
+                id: 'proc_' + Date.now(),
+                type: type,
+                name: name,
+                qty: qty,
+                price: price
+            });
+            
+            renderNewStyleProcessList();
+            closeAddProcessModal();
+            showToast('工序添加成功');
+        }
+        
+        // 渲染新增款式的工序列表
+        function renderNewStyleProcessList() {
+            const listArea = document.getElementById('newStyleProcessList');
+            const totalRow = document.getElementById('newStyleTotalRow');
+            const totalSpan = document.getElementById('newStyleTotal');
+            
+            if (newStyleProcesses.length === 0) {
+                listArea.innerHTML = '<div style="text-align:center;padding:20px;color:#9ca3af;font-size:13px">暂无工序，点击上方按钮添加</div>';
+                totalRow.style.display = 'none';
+                return;
+            }
+            
+            const typeNames = { pingche: '平车', zache: '扎车', kanche: '坎车' };
+            let total = 0;
+            
+            let html = '<table class="process-table"><thead><tr><th>工序</th><th>类型</th><th style="text-align:center">数量</th><th>单价</th><th>小计</th><th style="text-align:center">操作</th></tr></thead><tbody>';
+            
+            newStyleProcesses.forEach((p, idx) => {
+                const subtotal = p.price * p.qty;
+                total += subtotal;
+                html += `
+                    <tr>
+                        <td>${escapeHtml(p.name)}</td>
+                        <td>${typeNames[p.type] || p.type}</td>
+                        <td style="text-align:center">${p.qty}</td>
+                        <td>¥${p.price.toFixed(2)}</td>
+                        <td style="font-weight:600">¥${subtotal.toFixed(2)}</td>
+                        <td style="text-align:center">
+                            <button onclick="removeNewStyleProcess(${idx})" style="padding:4px 8px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✕</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            listArea.innerHTML = html;
+            totalRow.style.display = 'flex';
+            totalSpan.textContent = '¥' + total.toFixed(2);
+        }
+        
+        // 删除新增款式的工序
+        function removeNewStyleProcess(idx) {
+            newStyleProcesses.splice(idx, 1);
+            renderNewStyleProcessList();
+            showToast('工序已删除');
+        }
+        
+        // 显示工序库选择弹窗
+        function showProcessLibraryModal() {
+            currentProcessTab = 'pingche';
+            selectedProcessIds = [];
+            document.getElementById('processLibraryFilter').value = '';
+            switchProcessTab('pingche');
+            document.getElementById('processLibraryModal').classList.add('show');
+        }
+        
+        // 关闭工序库选择弹窗
+        function closeProcessLibraryModal() {
+            document.getElementById('processLibraryModal').classList.remove('show');
+        }
+        
+        // 切换工序类型标签
+        function switchProcessTab(type) {
+            currentProcessTab = type;
+            
+            // 更新标签样式
+            document.getElementById('procTabPingche').style.background = type === 'pingche' ? '#4361ee' : '#f3f4f6';
+            document.getElementById('procTabPingche').style.color = type === 'pingche' ? '#fff' : '#374151';
+            document.getElementById('procTabZache').style.background = type === 'zache' ? '#4361ee' : '#f3f4f6';
+            document.getElementById('procTabZache').style.color = type === 'zache' ? '#fff' : '#374151';
+            document.getElementById('procTabKanche').style.background = type === 'kanche' ? '#4361ee' : '#f3f4f6';
+            document.getElementById('procTabKanche').style.color = type === 'kanche' ? '#fff' : '#374151';
+            
+            renderProcessLibrary();
+        }
+        
+        // 筛选工序库
+        function filterProcessLibrary() {
+            renderProcessLibrary();
+        }
+        
+        // 渲染工序库列表
+        function renderProcessLibrary() {
+            const listArea = document.getElementById('processLibraryList');
+            const filter = document.getElementById('processLibraryFilter').value.toLowerCase();
+            const processes = DB.processes[currentProcessTab] || [];
+            
+            const filtered = processes.filter(p => {
+                return !filter || (p.name && p.name.toLowerCase().includes(filter));
+            });
+            
+            document.getElementById('totalProcCount').textContent = filtered.length;
+            
+            if (filtered.length === 0) {
+                listArea.innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;font-size:14px">暂无工序</div>';
+                updateSelectedProcPreview();
+                return;
+            }
+            
+            let html = '';
+            filtered.forEach((p, idx) => {
+                const isSelected = selectedProcessIds.includes(p.id || p.name);
+                html += `
+                    <div style="display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid #f3f4f6;cursor:pointer;${isSelected ? 'background:#eff6ff' : ''}" onclick="toggleProcessSelection('${p.id || p.name}')">
+                        <div style="width:28px;height:28px;border:3px solid ${isSelected ? '#4361ee' : '#d1d5db'};border-radius:6px;display:flex;align-items:center;justify-content:center;margin-right:14px;flex-shrink:0;background:${isSelected ? '#4361ee' : 'white'}">
+                            ${isSelected ? '<span style="color:white;font-size:18px;font-weight:bold">✓</span>' : ''}
+                        </div>
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:15px;color:#1a1a2e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(p.name || '')}</div>
+                        </div>
+                        <div style="font-size:16px;font-weight:700;color:#e94560;margin-left:12px;flex-shrink:0">¥${(p.price || 0).toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            listArea.innerHTML = html;
+            updateSelectedProcPreview();
+        }
+        
+        // 更新已选工序预览
+        function updateSelectedProcPreview() {
+            const count = selectedProcessIds.length;
+            document.getElementById('selectedProcCount').textContent = count;
+            document.getElementById('selectedProcCount2').textContent = count;
+            
+            const previewArea = document.getElementById('selectedProcPreview');
+            if (count === 0) {
+                previewArea.innerHTML = '<span style="font-size:12px;color:#9ca3af">暂无</span>';
+                return;
+            }
+            
+            const processes = DB.processes[currentProcessTab] || [];
+            let html = '';
+            selectedProcessIds.forEach(id => {
+                const proc = processes.find(p => (p.id || p.name) === id);
+                if (proc) {
+                    html += `<span style="padding:3px 8px;background:#4361ee;color:white;border-radius:4px;font-size:11px;white-space:nowrap">${escapeHtml(proc.name.substring(0, 10))}</span>`;
+                }
+            });
+            previewArea.innerHTML = html;
+        }
+        
+        // 全选工序
+        function selectAllProcesses() {
+            const filter = document.getElementById('processLibraryFilter').value.toLowerCase();
+            const processes = DB.processes[currentProcessTab] || [];
+            const filtered = processes.filter(p => {
+                return !filter || (p.name && p.name.toLowerCase().includes(filter));
+            });
+            
+            filtered.forEach(p => {
+                const id = p.id || p.name;
+                if (!selectedProcessIds.includes(id)) {
+                    selectedProcessIds.push(id);
+                }
+            });
+            
+            renderProcessLibrary();
+            showToast('已全选 ' + filtered.length + ' 个工序');
+        }
+        
+        // 取消全选工序
+        function deselectAllProcesses() {
+            selectedProcessIds = [];
+            renderProcessLibrary();
+            showToast('已清空选择');
+        }
+        
+        // 切换工序选中状态
+        function toggleProcessSelection(id) {
+            const idx = selectedProcessIds.indexOf(id);
+            if (idx >= 0) {
+                selectedProcessIds.splice(idx, 1);
+            } else {
+                selectedProcessIds.push(id);
+            }
+            renderProcessLibrary();
+        }
+        
+        // 确认选择工序
+        function confirmProcessSelection() {
+            if (selectedProcessIds.length === 0) {
+                showToast('请先选择工序');
+                return;
+            }
+            
+            const processes = DB.processes[currentProcessTab] || [];
+            let addedCount = 0;
+            
+            selectedProcessIds.forEach(id => {
+                const proc = processes.find(p => (p.id || p.name) === id);
+                if (proc) {
+                    newStyleProcesses.push({
+                        id: 'proc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        type: currentProcessTab,
+                        name: proc.name,
+                        qty: 1,
+                        price: proc.price || 0
+                    });
+                    addedCount++;
+                }
+            });
+            
+            renderNewStyleProcessList();
+            closeProcessLibraryModal();
+            showToast('已添加 ' + addedCount + ' 个工序');
+        }
+        
+        // 显示以图搜款
+        function showImageSearch() {
+            currentPage = 'search';
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('listPage').style.display = 'none';
+            document.getElementById('newStylePage').style.display = 'none';
+            document.getElementById('searchPage').style.display = 'block';
+            
+            updateNav('navSearch');
+            document.getElementById('searchResultArea').innerHTML = '';
+        }
+        
+        // 更新导航
+        function updateNav(activeId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(activeId).classList.add('active');
+        }
+        
+        // 加载统计数据
+        function loadStats() {
+            const totalStyles = DB.styles.length;
+            const approvedStyles = DB.styles.filter(s => s.status === 'approved').length;
+            const pendingStyles = DB.styles.filter(s => s.status !== 'approved').length;
+            
+            let totalPrice = 0;
+            DB.styles.forEach(s => {
+                if (s.selections) {
+                    s.selections.forEach(p => {
+                        totalPrice += (p.price || 0) * (p.qty || 0);
+                    });
+                }
+            });
+            
+            document.getElementById('statsArea').innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+                    <div style="background:#f0f9ff;padding:14px;border-radius:10px;text-align:center">
+                        <div style="font-size:24px;font-weight:700;color:#0ea5e9">${totalStyles}</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:4px">总款式</div>
+                    </div>
+                    <div style="background:#f0fdf4;padding:14px;border-radius:10px;text-align:center">
+                        <div style="font-size:24px;font-weight:700;color:#22c55e">${approvedStyles}</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:4px">已审批</div>
+                    </div>
+                    <div style="background:#fffbeb;padding:14px;border-radius:10px;text-align:center">
+                        <div style="font-size:24px;font-weight:700;color:#f59e0b">${pendingStyles}</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:4px">待审批</div>
+                    </div>
+                    <div style="background:#fef2f2;padding:14px;border-radius:10px;text-align:center">
+                        <div style="font-size:20px;font-weight:700;color:#ef4444">¥${totalPrice.toFixed(0)}</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:4px">总工价</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 加载款式列表
+        function loadStyleList() {
+            allStyles = [...DB.styles].sort((a, b) => {
+                return new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0);
+            });
+            renderStyleList(allStyles);
+        }
+        
+        // 渲染款式列表
+        function renderStyleList(styles) {
+            const area = document.getElementById('styleListArea');
+            
+            if (styles.length === 0) {
+                area.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>暂无款式数据</p>
+                        <p style="font-size:12px;margin-top:6px">点击底部"新增"按钮添加款式</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            area.innerHTML = styles.map(style => {
+                let total = 0;
+                if (style.selections) {
+                    style.selections.forEach(p => {
+                        total += (p.price || 0) * (p.qty || 0);
+                    });
+                }
+                
+                const img = style.imgs && style.imgs[0] ? style.imgs[0] : null;
+                
+                return `
+                    <div class="style-item" onclick="showStyleDetail('${style.id}')">
+                        <div class="img">
+                            ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">` : '👔'}
+                        </div>
+                        <div class="info">
+                            <div class="name">${escapeHtml(style.name || '未命名')}</div>
+                            <div class="meta">
+                                ${style.code ? '款号: ' + escapeHtml(style.code) + ' | ' : ''}
+                                ${style.date || '未知日期'}
+                            </div>
+                            <div class="price">¥${total.toFixed(2)}</div>
+                            <span class="status ${style.status === 'approved' ? 'approved' : 'pending'}">
+                                ${style.status === 'approved' ? '✅ 已审批' : '⏳ 待审批'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 搜索过滤
+        function filterStyles() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            if (!keyword) {
+                renderStyleList(allStyles);
+                return;
+            }
+            
+            const filtered = allStyles.filter(s => {
+                return (s.name && s.name.toLowerCase().includes(keyword)) ||
+                       (s.code && s.code.toLowerCase().includes(keyword)) ||
+                       (s.customer && s.customer.toLowerCase().includes(keyword));
+            });
+            
+            renderStyleList(filtered);
+        }
+        
+        // 显示款式详情
+        function showStyleDetail(id) {
+            const style = DB.styles.find(s => s.id == id);
+            if (!style) {
+                showToast('款式不存在');
+                return;
+            }
+            
+            let total = 0;
+            const sub = { pingche: 0, zache: 0, kanche: 0 };
+            
+            if (style.selections) {
+                style.selections.forEach(p => {
+                    const price = (p.price || 0) * (p.qty || 0);
+                    total += price;
+                    if (sub[p.type] !== undefined) sub[p.type] += price;
+                });
+            }
+            
+            const typeNames = { pingche: '平车', zache: '扎车', kanche: '坎车' };
+            
+            let html = `
+                <div style="display:flex;gap:12px;margin-bottom:16px">
+                    <div style="width:80px;height:80px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:32px">
+                        ${style.imgs && style.imgs[0] ? `<img src="${style.imgs[0]}" style="width:100%;height:100%;object-fit:cover">` : '👔'}
+                    </div>
+                    <div style="flex:1;min-width:0">
+                        <div style="font-size:17px;font-weight:700;color:#1a1a2e">${escapeHtml(style.name || '未命名')}</div>
+                        <div style="font-size:12px;color:#6b7280;margin-top:4px">
+                            ${style.code ? '款号: ' + escapeHtml(style.code) + '<br>' : ''}
+                            ${style.customer ? '客户: ' + escapeHtml(style.customer) + '<br>' : ''}
+                            日期: ${style.date || '未知'}
+                        </div>
+                        <div style="font-size:18px;font-weight:700;color:#e94560;margin-top:6px">¥${total.toFixed(2)}</div>
+                    </div>
+                </div>
+                
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+                    <div style="background:#eff6ff;padding:10px;border-radius:8px;text-align:center">
+                        <div style="font-size:14px;font-weight:700;color:#3b82f6">¥${sub.pingche.toFixed(2)}</div>
+                        <div style="font-size:11px;color:#64748b">平车</div>
+                    </div>
+                    <div style="background:#ecfdf5;padding:10px;border-radius:8px;text-align:center">
+                        <div style="font-size:14px;font-weight:700;color:#10b981">¥${sub.zache.toFixed(2)}</div>
+                        <div style="font-size:11px;color:#64748b">扎车</div>
+                    </div>
+                    <div style="background:#fffbeb;padding:10px;border-radius:8px;text-align:center">
+                        <div style="font-size:14px;font-weight:700;color:#f59e0b">¥${sub.kanche.toFixed(2)}</div>
+                        <div style="font-size:11px;color:#64748b">坎车</div>
+                    </div>
+                </div>
+                
+                ${style.note ? `<div style="background:#f8fafc;padding:10px;border-radius:8px;margin-bottom:16px;font-size:13px;color:#475569">📝 ${escapeHtml(style.note)}</div>` : ''}
+                
+                <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:10px">工序明细 (${(style.selections || []).length}道)</div>
+            `;
+            
+            if (style.selections && style.selections.length > 0) {
+                html += `
+                    <table class="process-table">
+                        <thead>
+                            <tr>
+                                <th>工序</th>
+                                <th>类型</th>
+                                <th style="text-align:center">数量</th>
+                                <th>单价</th>
+                                <th>小计</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${style.selections.map((p, idx) => `
+                                <tr>
+                                    <td>${escapeHtml(p.name || '')}</td>
+                                    <td>${typeNames[p.type] || p.type || ''}</td>
+                                    <td style="text-align:center">${p.qty || 0}</td>
+                                    <td>¥${(p.price || 0).toFixed(2)}</td>
+                                    <td style="font-weight:600">¥${((p.price || 0) * (p.qty || 0)).toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                html += `<div style="text-align:center;padding:20px;color:#9ca3af;font-size:13px">暂无工序数据</div>`;
+            }
+            
+            html += `
+                <div class="total-row">
+                    <span class="label">合计</span>
+                    <span class="value">¥${total.toFixed(2)}</span>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn-cancel" onclick="closeDetail()">关闭</button>
+                    <button class="btn-save" onclick="exportStyle('${style.id}')">导出</button>
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = html;
+            document.getElementById('detailModal').classList.add('show');
+        }
+        
+        // 关闭详情
+        function closeDetail() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+        
+        // 预览新增款式图片
+        function previewNewStyleImg(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+            
+            const preview = document.getElementById('newStyleImgPreview');
+            newStyleImages = [];
+            
+            Array.from(files).forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    newStyleImages.push(e.target.result);
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // 保存新增款式
+        function saveNewStyle() {
+            const code = document.getElementById('newStyleCode').value.trim();
+            const name = document.getElementById('newStyleName').value.trim();
+            const customer = document.getElementById('newStyleCustomer').value.trim();
+            const date = document.getElementById('newStyleDate').value;
+            const note = document.getElementById('newStyleNote').value.trim();
+            
+            if (!name) {
+                showToast('请输入款式名称');
+                return;
+            }
+            
+            const newStyle = {
+                id: 'style_' + Date.now(),
+                code: code,
+                name: name,
+                customer: customer,
+                date: date,
+                note: note,
+                imgs: newStyleImages,
+                selections: mobileSelectedProcesses,
+                status: 'pending',
+                createdBy: currentUser ? { id: currentUser.uid || currentUser.id, username: currentUser.username } : null,
+                createdAt: new Date().toISOString()
+            };
+            
+            DB.styles.push(newStyle);
+            saveDB();
+            showToast('款式保存成功');
+            showStyleList();
+        }
+        
+        // 以图搜款
+        function doImageSearch(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const resultArea = document.getElementById('searchResultArea');
+            resultArea.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>正在分析图片...</p>
+                </div>
+            `;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const targetImg = e.target.result;
+                
+                // 简单的颜色匹配算法
+                const targetColors = extractAvgColor(targetImg);
+                
+                const stylesWithImg = DB.styles.filter(s => s.imgs && s.imgs[0]);
+                const results = [];
+                
+                stylesWithImg.forEach(style => {
+                    const styleColors = extractAvgColor(style.imgs[0]);
+                    if (styleColors) {
+                        const similarity = calcColorSimilarity(targetColors, styleColors);
+                        results.push({ style: style, similarity: similarity });
+                    }
+                });
+                
+                results.sort((a, b) => b.similarity - a.similarity);
+                
+                if (results.length === 0) {
+                    resultArea.innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">🔍</div>
+                            <p>没有找到带图片的款式</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                resultArea.innerHTML = `
+                    <div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:10px">找到 ${results.length} 个相似款式</div>
+                    ${results.slice(0, 10).map(r => {
+                        let total = 0;
+                        if (r.style.selections) {
+                            r.style.selections.forEach(p => {
+                                total += (p.price || 0) * (p.qty || 0);
+                            });
+                        }
+                        
+                        const simPercent = (r.similarity * 100).toFixed(1);
+                        const simColor = simPercent >= 70 ? '#16a34a' : simPercent >= 50 ? '#f59e0b' : '#ef4444';
+                        
+                        return `
+                            <div class="style-item" onclick="showStyleDetail('${r.style.id}')">
+                                <div class="img">
+                                    <img src="${r.style.imgs[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
+                                </div>
+                                <div class="info">
+                                    <div class="name">${escapeHtml(r.style.name || '未命名')}</div>
+                                    <div class="meta">${r.style.date || '未知日期'}</div>
+                                    <div class="price">¥${total.toFixed(2)}</div>
+                                    <span class="status" style="background:${simColor}15;color:${simColor}">相似度 ${simPercent}%</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        // 提取平均颜色
+        function extractAvgColor(imgSrc) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = 8;
+                        canvas.height = 8;
+                        ctx.drawImage(img, 0, 0, 8, 8);
+                        
+                        const data = ctx.getImageData(0, 0, 8, 8).data;
+                        let r = 0, g = 0, b = 0;
+                        const count = 64;
+                        
+                        for (let i = 0; i < data.length; i += 4) {
+                            r += data[i];
+                            g += data[i + 1];
+                            b += data[i + 2];
+                        }
+                        
+                        resolve({
+                            r: Math.round(r / count),
+                            g: Math.round(g / count),
+                            b: Math.round(b / count)
+                        });
+                    } catch (e) {
+                        resolve(null);
+                    }
+                };
+                img.onerror = function() {
+                    resolve(null);
+                };
+                img.src = imgSrc;
+            });
+        }
+        
+        // 计算颜色相似度
+        function calcColorSimilarity(c1, c2) {
+            if (!c1 || !c2) return 0;
+            const distance = Math.sqrt(
+                Math.pow(c1.r - c2.r, 2) +
+                Math.pow(c1.g - c2.g, 2) +
+                Math.pow(c1.b - c2.b, 2)
+            );
+            const maxDistance = 441.67;
+            return Math.max(0, 1 - distance / maxDistance);
+        }
+        
+        // 导出款式
+        function exportStyle(id) {
+            const style = DB.styles.find(s => s.id == id);
+            if (!style) {
+                showToast('款式不存在');
+                return;
+            }
+            
+            let text = `款式名称: ${style.name || ''}\n`;
+            text += `款号: ${style.code || ''}\n`;
+            text += `客户: ${style.customer || ''}\n`;
+            text += `日期: ${style.date || ''}\n`;
+            text += `备注: ${style.note || ''}\n`;
+            text += `\n工序明细:\n`;
+            text += `工序\t类型\t数量\t单价\t小计\n`;
+            
+            let total = 0;
+            const typeNames = { pingche: '平车', zache: '扎车', kanche: '坎车' };
+            
+            if (style.selections) {
+                style.selections.forEach(p => {
+                    const subtotal = (p.price || 0) * (p.qty || 0);
+                    total += subtotal;
+                    text += `${p.name || ''}\t${typeNames[p.type] || p.type || ''}\t${p.qty || 0}\t${(p.price || 0).toFixed(2)}\t${subtotal.toFixed(2)}\n`;
+                });
+            }
+            
+            text += `\n合计: ¥${total.toFixed(2)}\n`;
+            
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${style.name || '款式'}_工序表.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('导出成功');
+        }
+        
+        // 跳转到电脑版
+        function goToDesktop() {
+            window.location.href = 'index.html';
+        }
+        
+        // 显示Toast
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+        
+        // HTML转义
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 点击弹窗外部关闭
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetail();
+            }
+        });
+        
+        // 初始化
+        init();
+    </script>
+</body>
+</html>
+
+
