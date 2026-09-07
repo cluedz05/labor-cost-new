@@ -13,7 +13,7 @@
     // 配置
     // ============================================
     
-    const GITHUB_REPO = 'cluedz05/labor-cost';
+    const GITHUB_REPO = 'cluedz05/labor-cost-new';
     const GITHUB_BRANCH = 'main';
     const DATA_FILE_PATH = 'data/labor-cost-data.json';
     
@@ -512,3 +512,4 @@
     }
 
 })();
+
