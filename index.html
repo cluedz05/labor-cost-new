@@ -1114,6 +1114,27 @@ a:hover {
     .nailong-horn.right { right: 12px; }
 }
 </style>
+<!-- 真正奶龙图片样式 -->
+<style>
+.nailong-real {
+    width: 100px;
+    height: auto;
+    animation: nailongRealBounce 1s ease-in-out infinite;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+@keyframes nailongRealBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-8px) rotate(-3deg); }
+    75% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@media (max-width: 768px) {
+    .nailong-real {
+        width: 60px;
+    }
+}
+</style>
 </head>
 
 <body data-inspector-id="html:8769897d:1">
@@ -2525,6 +2546,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
 });
 </script></body></html>
+
 
 
 
