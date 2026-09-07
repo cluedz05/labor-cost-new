@@ -1,0 +1,19 @@
+{
+    "styles":  [
+
+               ],
+    "config":  {
+
+               },
+    "users":  [
+                  {
+                      "username":  "admin",
+                      "password":  "admin123",
+                      "role":  "admin"
+                  }
+              ],
+    "style_library":  [
+
+                      ],
+    "last_updated":  "2026-09-07 09:28:59"
+}
