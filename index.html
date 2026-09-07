@@ -736,6 +736,132 @@ a:hover {
 <div class="cute-decoration" style="bottom: 15%; right: 5%; animation-delay: 3s;">🌾</div>
 <div class="cute-decoration" style="top: 50%; left: 3%; animation-delay: 4s;">🍼</div>
 <div class="cute-decoration" style="top: 45%; right: 3%; animation-delay: 5s;">🐂</div>
+<!-- 奶龙和牛打架动画 -->
+<style>
+/* 标题区域容器 */
+.header-title-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+/* 奶龙卡通形象 */
+.nai-long {
+    font-size: 60px;
+    animation: naiLongFight 1.5s ease-in-out infinite;
+    display: inline-block;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+/* 牛卡通形象 */
+.niu-cartoon {
+    font-size: 60px;
+    animation: niuFight 1.5s ease-in-out infinite;
+    display: inline-block;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+/* 奶龙打架动画 */
+@keyframes naiLongFight {
+    0% { transform: translateX(0) rotate(0deg) scale(1); }
+    20% { transform: translateX(-15px) rotate(-10deg) scale(1.1); }
+    40% { transform: translateX(20px) rotate(15deg) scale(1.2); }
+    60% { transform: translateX(-10px) rotate(-5deg) scale(1.1); }
+    80% { transform: translateX(15px) rotate(10deg) scale(1.15); }
+    100% { transform: translateX(0) rotate(0deg) scale(1); }
+}
+
+/* 牛打架动画 */
+@keyframes niuFight {
+    0% { transform: translateX(0) rotate(0deg) scale(1); }
+    20% { transform: translateX(15px) rotate(10deg) scale(1.1); }
+    40% { transform: translateX(-20px) rotate(-15deg) scale(1.2); }
+    60% { transform: translateX(10px) rotate(5deg) scale(1.1); }
+    80% { transform: translateX(-15px) rotate(-10deg) scale(1.15); }
+    100% { transform: translateX(0) rotate(0deg) scale(1); }
+}
+
+/* 打架特效 - 火花 */
+.fight-spark {
+    position: absolute;
+    font-size: 30px;
+    animation: sparkFlash 0.5s ease-in-out infinite;
+    opacity: 0;
+}
+
+.spark1 { top: 10%; left: 45%; animation-delay: 0s; }
+.spark2 { top: 30%; left: 50%; animation-delay: 0.2s; }
+.spark3 { top: 50%; left: 48%; animation-delay: 0.4s; }
+.spark4 { top: 20%; left: 52%; animation-delay: 0.6s; }
+.spark5 { top: 40%; left: 46%; animation-delay: 0.8s; }
+
+@keyframes sparkFlash {
+    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+}
+
+/* 打架特效 - 冲击波纹 */
+.fight-wave {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 3px solid #FFD700;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: waveExpand 1.5s ease-out infinite;
+    opacity: 0;
+}
+
+@keyframes waveExpand {
+    0% { width: 20px; height: 20px; opacity: 0.8; border-width: 5px; }
+    100% { width: 120px; height: 120px; opacity: 0; border-width: 1px; }
+}
+
+/* VS 文字 */
+.vs-text {
+    font-size: 35px;
+    font-weight: bold;
+    color: #FF4500;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: vsPulse 0.5s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes vsPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+/* 标题文字 */
+.fight-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #8B4513;
+    text-shadow: 2px 2px 4px rgba(255,215,0,0.5);
+    margin: 0 15px;
+}
+
+/* 手机端适配 */
+@media (max-width: 768px) {
+    .nai-long, .niu-cartoon {
+        font-size: 40px;
+    }
+    .vs-text {
+        font-size: 25px;
+    }
+    .fight-title {
+        font-size: 18px;
+    }
+    .fight-spark {
+        font-size: 20px;
+    }
+}
+</style>
 </head>
 
 <body data-inspector-id="html:8769897d:1">
@@ -2147,6 +2273,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
 });
 </script></body></html>
+
 
 
 
